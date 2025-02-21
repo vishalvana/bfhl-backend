@@ -1,16 +1,17 @@
-// server.js
 const express = require('express');
+const cors = require('cors');
 
-const cors = require('cors')
 const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
-const allowedOrigin = ['https://bfhl-frontend-peach-seven.vercel.app'];
+app.use(express.json());
+
+const allowedOrigins = ['https://bfhl-frontend-peach-seven.vercel.app'];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigin.includes(origin)) { // ✅ Corrected variable name
+    if (!origin || allowedOrigins.includes(origin)) { 
       callback(null, true); 
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -20,7 +21,6 @@ app.use(cors({
   credentials: true,
 }));
 
-
 // GET endpoint: /bfhl
 app.get('/bfhl', (req, res) => {
   res.status(200).json({ operation_code: 1 });
@@ -28,16 +28,11 @@ app.get('/bfhl', (req, res) => {
 
 // Helper functions
 const isNumeric = (str) => !isNaN(str);
-const isAlphabet = (str) => /^[A-Za-z]$/.test(str);
+const isAlphabet = (str) => /^[A-Za-z]+$/.test(str);
+
 const getHighestAlphabet = (alphabets) => {
   if (alphabets.length === 0) return [];
-  let highest = alphabets[0];
-  alphabets.forEach(letter => {
-    if(letter.toLowerCase() > highest.toLowerCase()) {
-      highest = letter;
-    }
-  });
-  return [highest];
+  return [alphabets.sort((a, b) => b.localeCompare(a, undefined, { sensitivity: 'base' }))[0]];
 };
 
 // POST endpoint: /bfhl
@@ -60,7 +55,7 @@ app.post('/bfhl', (req, res) => {
     });
 
     const userDetails = {
-      user_id: "Vishal_Vana_05092003", // Example: your_fullname_ddmmyyyy
+      user_id: "Vishal_Vana_05092003",
       email: "22bcs10526@cuchd.in",
       roll_number: "22BCS10526"
     };
@@ -75,6 +70,7 @@ app.post('/bfhl', (req, res) => {
 
     res.json(response);
   } catch (error) {
+    console.error(error); // ✅ Log errors for debugging
     res.status(500).json({ is_success: false, message: "Server error" });
   }
 });
