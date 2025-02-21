@@ -8,7 +8,7 @@ const port = process.env.PORT || 3000;
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-const allowedOrigin =['https://bfhl-frontend-peach-seven.vercel.app'];
+const allowedOrigin =['https://bfhl-frontend-peach-seven.vercel.app/'];
 
 app.use(cors({
   origin: (origin, callback) => {
