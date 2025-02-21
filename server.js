@@ -6,21 +6,20 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
-app.use(express.json());
-
-const allowedOrigin =['https://bfhl-frontend-peach-seven.vercel.app/'];
+const allowedOrigin = ['https://bfhl-frontend-peach-seven.vercel.app'];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true); // Allow request
+    if (!origin || allowedOrigin.includes(origin)) { // ✅ Corrected variable name
+      callback(null, true); 
     } else {
-      callback(new Error('Not allowed by CORS')); // Block request
+      callback(new Error('Not allowed by CORS'));
     }
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true, // Allow cookies or authorization headers
+  credentials: true,
 }));
+
 
 // GET endpoint: /bfhl
 app.get('/bfhl', (req, res) => {
